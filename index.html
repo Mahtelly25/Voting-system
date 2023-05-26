@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./w3.css">
+    <script src="./web3.min.js"></script>
+    <script src="./abi.js"></script>
+    <title>Document</title>
+    <style>
+        a{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- <button onclick="connect()">connect</button>
+    <button onclick="countCandidates()">count</button> -->
+    <div class="w3-bar w3-blue w3-padding">
+        <a class="w3-bar-item w3-wide">KYF YOUTH VOTE</a>
+        <div class="w3-right">
+            <a class="w3-bar-item" onclick="connect()">Connect Wallet</a>
+        </div>
+    </div>
+    <br>
+    <div class="w3-auto">
+        <div class="w3-row-padding w3-stretch" id="candidateDisplay">
+            <!-- <div class="w3-col l3">
+                <div class="w3-card w3-padding">
+                    <h2>Candidate 1</h2>
+                    <h1>0 Votes</h1>
+                    <button class="w3-btn w3-blue">Vote</button>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <script>
+        
+        var web3 = new Web3("HTTP://127.0.0.1:7545");
+        const address="0x173785DA339b1653A50493Da163F0D9884545cD9";
+        var contract = new web3.eth.Contract(abi, address);
+
+        async function connect(){
+            // await window.web3.currentProvider.enable();
+            // window.web3 = new Web3(window.web3.currentProvider);
+            const accounts = await ethereum.request({method: "eth_requestAccounts"});
+            const account = accounts[0];
+            
+        }
+
+        function countCandidates(){
+            var candidates = [];
+            contract.methods.CountOfCandidates().call().then((data) => {
+                // console.log(data);
+                
+                for(let i = 1; i <= data; i++){
+                    contract.methods.candidates(i).call().then((data) => {
+                        document.getElementById("candidateDisplay").innerHTML += `<div class="w3-col l3">
+                <div class="w3-card w3-padding">
+                    <h2>${data.name}</h2>
+                    <h1>${data.Count_Of_Votes} Votes</h1>
+                    <button class="w3-btn w3-blue" onclick='vote(${data.id})'>Vote</button>
+                </div>
+            </div>`
+                        candidates.push({candidate_name: data.name, candidate_id: data.id, votes: data.Count_Of_Votes})
+                    });
+                }
+                
+            })
+
+
+            console.log(candidates);
+    
+
+        }
+
+        countCandidates();
+        console.log(web3.eth.getAccounts())
+        async function vote(id){
+            
+            // await web3.eth.getAccounts().then(function(account){
+            //     return contract.methods.vote(id).send({from: account[9]});
+            // }).then(function(tmp){
+            //     console.log("vote successful");
+            // }).catch(function(err){
+            //     console.log(err)
+            // });
+            const accounts = await ethereum.request({method: "eth_requestAccounts"});
+            const account = accounts[0];
+            console.log(account);
+
+            await contract.methods.vote(id).send({from:account}).then((data) => {
+                alert("vote successful");
+            }).catch((e) => {
+                console.log(e);
+            })
+
+            // window.location.href = window.location.href;
+        }
+    </script>
+</body>
+</html>
