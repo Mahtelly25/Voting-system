@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AddCandidate from "./pages/AddCandidate";
 
 import Home from "./pages/Home";
-import "./app.css";
+import "./App.css";
 import Candidates from "./pages/Candidates";
 const App = () => {
   return (
