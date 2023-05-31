@@ -3,7 +3,7 @@ import { abi } from "./abi";
 export let web3 = new Web3(window.ethereum);
 export const contract = new web3.eth.Contract(
   abi,
-  "0xD36A2977695993157A8Dd1bef9823B636f471620"
+  "0x4c72800645065ff4907e637e7d78f1b47bf57c38"
 );
 
 export const login = async () => {
